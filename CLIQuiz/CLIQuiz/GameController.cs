@@ -32,6 +32,7 @@ namespace CLIQuiz
             Console.WriteLine();
 
             Console.WriteLine($"Hello, {playerName}! Let's get started.");
+            Console.WriteLine();
 
             game = new Game(playerName, PopulateQuestionBank());
         }
@@ -55,24 +56,59 @@ namespace CLIQuiz
 
         private void AskQuestion(Question question)
         {
-            // TODO: add logic for displaying question and taking input
             Console.WriteLine(question.Prompt);
             Console.WriteLine();
             Console.WriteLine($"A) {question.Answer1.AnswerText}");
             Console.WriteLine($"B) {question.Answer2.AnswerText}");
             Console.WriteLine($"C) {question.Answer3.AnswerText}");
             Console.WriteLine($"D) {question.Answer4.AnswerText}");
-            
-            bool validInput = false;
+            bool validInput;
+            string userChoice;
             do
             {
                 Console.WriteLine();
                 Console.Write($"{game.PlayerName}: ");
-                var userChoice = Console.ReadLine().ToUpper();
-                if ( userChoice == "A" || userChoice == "B" || userChoice == "C" || userChoice == "D") validInput = true;
+                userChoice = Console.ReadLine().ToUpper();
+                validInput = ValidateUserChoice(userChoice);
             } while (!validInput);
-            
 
+            if (EvaluateAnswer(userChoice, question))
+            {
+                TallyCorrectAnswer();
+            }
+            else
+            {
+                TallyIncorrectAnswer();
+            }
+        }
+
+        private bool EvaluateAnswer(string userChoice, Question question)
+        {
+            return (userChoice == "A" && question.Answer1.isCorrect) ||
+                    (userChoice == "B" && question.Answer2.isCorrect) ||
+                    (userChoice == "C" && question.Answer3.isCorrect) ||
+                    (userChoice == "D" && question.Answer4.isCorrect);
+        }
+
+        private void TallyCorrectAnswer()
+        {
+            Console.WriteLine();
+            Console.WriteLine("That's correct!");
+            Console.WriteLine();
+            game.CorrectAnswers++;
+        }
+
+        private void TallyIncorrectAnswer()
+        {
+            Console.WriteLine();
+            Console.WriteLine("That's not quite right.");
+            Console.WriteLine();
+            game.IncorrectAnswers++;
+        }
+
+        private bool ValidateUserChoice(string userChoice)
+        {
+            return userChoice == "A" || userChoice == "B" || userChoice == "C" || userChoice == "D";
         }
 
         // TODO (adv): ShuffleAnswers() helper method

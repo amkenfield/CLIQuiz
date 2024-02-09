@@ -10,8 +10,8 @@ namespace CLIQuiz
     {
         public string PlayerName { get; }
         public List<Question> QuestionBank {  get; }
-        public int CorrectAnswers { get; }
-        public int IncorrectAnswers { get; }
+        public int CorrectAnswers { get; set; }
+        public int IncorrectAnswers { get; set;  }
 
         public Game(string playerName, List<Question> questions)
         {
